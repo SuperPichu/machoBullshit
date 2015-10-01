@@ -248,7 +248,7 @@ def turn(players, current):
 clear()
 raw_input("Welcome to Unbelievable Macho Bullshit!")
 players = []
-xls = ExcelFile('test.xlsx')
+xls = ExcelFile('characters.xlsx')
 df = xls.parse(xls.sheet_names[0])
 data = df.to_dict()
 for i in range(0, len(data["Name"])):
