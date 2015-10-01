@@ -36,7 +36,7 @@ def roll(num, top, bottom):
 	for die in rolls:
 		if(die <= bottom ):
 			fail += 1
-		else if(die >= top):
+		elif(die >= top):
 			success += 1
 	result.append(success)
 	result.append(fail)
@@ -44,40 +44,39 @@ def roll(num, top, bottom):
 def dead(player):
 	clear()
 	print(player.full + " is dying!!")
-	print("Shout a one-liner to finish them off!")
+	print("Shout a one-liner to finish them off!\nPlease wait...")
 	sleep(10)
 	valid = False
-	while(!valid):
-		answer = input("Times up! Are they dead? [Y/N]")
-		if(answer == "Y" || answer == "y"):
+	while(not valid):
+		answer = raw_input('Times up! Are they dead? [Y/N]: ')
+		if((answer == "Y") or (answer == "y")):
 			valid = True
 			player.dead = True
 			print(player.full + " is DEAD!")
-		if(answer == "N" || answer == "n"):
+		if((answer == "N") or (answer == "n")):
 			valid = True
+	raw_input("Press Enter to Continue")
 	return
 def showdown(player):
 	clear()
 	print("Final Showdown!")
 	result = roll(player.mind, 6, 5)
 	player.mind -= result[1]
-	if(player.mind == 0){
+	if(player.mind == 0):
 		dead(player)
 		return
-	}
 	result = roll(player.mooks, 5, 4)
 	player.mooks -= result[1]
-	if(player.mooks == 0){
+	if(player.mooks == 0):
 		dead(player)
 		return
-	}
 	result = roll(player.muscle, 4, 3)
 	player.muscle -= result[1]
-	if(player.muscle == 0){
+	if(player.muscle == 0):
 		dead(player)
 		return
-	}
 	print("You Survive!")
+	raw_input("Press Enter to Continue")
 	return
 def stats(players):
 	clear()
@@ -90,18 +89,20 @@ def stats(players):
 		if(player.dead):
 			dead = "Yes"
 		print("Dead?: " + dead)
+		print("\n\n")
+	raw_input("Press Enter to Continue")
 def startup(players):
 	clear()
 	for player in players:
 		print("Player: " + player.full)
-		print("\t" + player.bio)
+		print(player.bio + "\n\n")
 		print("Mind: " + str(player.mind))
-		print("\t" + player.edu)
+		print(player.edu + "\n\n")
 		print("Mooks: " + str(player.mooks))
-		print("\t" + player.hench)
+		print(player.hench + "\n\n")
 		print("Muscle: " + str(player.muscle))
-		print("\t" + player.train)
-		input("Press Enter to Continue")
+		print(player.train + "\n\n")
+		raw_input("Press Enter to Continue")
 		clear()
 def nextPlayer(players, last):
 	valid = False
@@ -109,13 +110,13 @@ def nextPlayer(players, last):
 	top = len(players)
 	for i in range(0, top):
 		print(str(i+1) + "." + players[i].full)
-	while(!valid):
-		answer = input("Choose next player: ")
-		if(answer > 0 && answer <= top):
+	while(not valid):
+		answer = int(raw_input("Choose next player: "))
+		if((answer > 0) and (answer <= top)):
 			valid = True
 			answer -= 1
+			current = players[answer]
 			players.append(last)
-			current = players[i]
 			stats(players)
 			turn(players, current)
 def turn(players, current):
@@ -124,31 +125,38 @@ def turn(players, current):
 	players.remove(current)
 	points = 2;
 	while(points>0):
-		print(points + " points remaining")
-		mind = input("How many points would you like to add to mind?: ")
+		print(str(points) + " points remaining")
+		mind = int(raw_input("How many points would you like to add to mind?: "))
+		if(mind > 2):
+			mind = 2
 		current.mind += mind
 		points -= mind
 		if(points > 0):
-			mooks = input("How many points would you like to add to mooks?: ")
+			mooks = int(raw_input("How many points would you like to add to mooks?: "))
+			if(mooks > 2):
+				mooks = 2
 			current.mooks += mooks
 			points -= mooks
 		if(points > 0):
-			muscle = input("How many points would you like to add to muscle?: ")
+			muscle = int(raw_input("How many points would you like to add to muscle?: "))
+			if(muscle > 2):
+				muscle = 2
 			current.muscle += muscle
 			points -= muscle
-	if(!current.dead):
-		input("Describe your evil deed (Enter to continue)")
+	if(not current.dead):
+		raw_input("Describe your evil deed (Enter to continue)")
+		clear()
 		print("Describe the hero and set his relentlessness")
 		hero = 0
 		for player in players:
-			print(player.name)
+			print(player.full)
 			valid = False
 			mind = 0
 			mooks = 0
 			muscle = 0
 
-			while(!valid):
-				mind = input("How many mind dice will you contribute?: ")
+			while(not valid):
+				mind = int(raw_input("How many mind dice will you contribute?: "))
 				valid = (mind <= player.mind)
 			result = roll(mind, 5, 1)
 			hero += result[0]
@@ -158,8 +166,8 @@ def turn(players, current):
 			if(player.mind == 0):
 				dead(player)
 			valid = False
-			while(!valid):
-				mooks = input("How many mooks dice will you contribute?: ")
+			while(not valid):
+				mooks = int(raw_input("How many mooks dice will you contribute?: "))
 				valid = (mooks <= player.mooks)
 			result = roll(mooks, 5, 1)
 			hero += result[0]
@@ -169,9 +177,9 @@ def turn(players, current):
 			if(player.mooks == 0):
 				dead(player)
 			valid = False
-			while(!valid):
-				muscle = input("How many muscle dice will you contribute?: ")
-				valid = (muscle < player.muscle)
+			while(not valid):
+				muscle = int(raw_input("How many muscle dice will you contribute?: "))
+				valid = (muscle <= player.muscle)
 			result = roll(muscle, 5, 1)
 			hero += result[0]
 			player.muscle -= result[1]
@@ -179,62 +187,66 @@ def turn(players, current):
 			print(str(player.muscle) + " muscle remaining")
 			if(player.muscle == 0):
 				dead(player)
-		input("The hero has a relentlessness of " + str(hero))
+			raw_input("Press Enter to Continue")
+			clear()
+		raw_input("The hero has a relentlessness of " + str(hero))
 		valid = False
 		finished = False
-		options = ["1. Mind", "2. Mooks", "3. Muscle"]
-		while(!valid):
+		options = ["1. Mind(" + str(current.mind) + ")", "2. Mooks(" + str(current.mooks) + ")", "3. Muscle(" + str(current.muscle) + ")", "4. FINAL SHOWDOWN"]
+		while(not valid):
 			clear()
 			print(current.full)
 			print("")
 			print("")
 			for option in options:
 				print(option)
-			answer = input("Which will you wager?: ")
-			if(answer > 0 && answer < 4):
+			answer = int(raw_input("Which will you wager?: "))
+			if((answer > 0) and (answer < 5)):
 				valid = True
 				valid2 = False
 				amt = 0
-				if(answer = 1):
-					while(!valid2):
-						amt = input("How many dice will you wager?: ")
+				if(answer == 1):
+					while(not valid2):
+						amt = int(raw_input("How many dice will you wager?: "))
 						valid2 = (amt <= current.mind)
 					result = roll(amt, 4, 3)
 					current.mind -= result[1]
-					print(str(result[0]) + "successes!")
-					input(str(current.mind) + " mind remaining")
+					print(str(result[0]) + " successes!")
+					raw_input(str(current.mind) + " mind remaining")
 					if(result[0] < hero):
 						showdown(current)
 					else:
 						print("You Survive!")
-				else if(answer = 2):
-					while(!valid2):
-						amt = input("How many dice will you wager?: ")
+				elif(answer == 2):
+					while(not valid2):
+						amt = int(raw_input("How many dice will you wager?: "))
 						valid2 = (amt <= current.mooks)
 					result = roll(amt, 5, 4)
 					current.mooks -= result[1]
 					print(str(result[0]) + "successes!")
-					input(str(current.mooks) + " mooks remaining")
+					raw_input(str(current.mooks) + " mooks remaining")
 					if(result[0] < hero):
 						showdown(current)
 					else:
 						print("You Survive!")
-				else if(answer = 3):
-					while(!valid2):
-						amt = input("How many dice will you wager?: ")
+				elif(answer == 3):
+					while(not valid2):
+						amt = int(raw_input("How many dice will you wager?: "))
 						valid2 = (amt <= current.muscle)
 					result = roll(amt, 6, 5)
 					current.muscle -= result[1]
 					print(str(result[0]) + "successes!")
-					input(str(current.muscle) + " muscle remaining")
+					raw_input(str(current.muscle) + " muscle remaining")
 					if(result[0] < hero):
 						showdown(current)
 					else:
 						print("You Survive!")
+				elif(answer == 4):
+					showdown(current)
 	nextPlayer(players, current)
 
 clear()
-input("Welcome to Unbelieveable Macho Bullshit!")
+raw_input("Welcome to Unbelieveable Macho Bullshit!")
 players = []
 xls = ExcelFile('test.xlsx')
 df = xls.parse(xls.sheet_names[0])
