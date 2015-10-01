@@ -246,7 +246,7 @@ def turn(players, current):
 	nextPlayer(players, current)
 
 clear()
-raw_input("Welcome to Unbelieveable Macho Bullshit!")
+raw_input("Welcome to Unbelievable Macho Bullshit!")
 players = []
 xls = ExcelFile('test.xlsx')
 df = xls.parse(xls.sheet_names[0])
